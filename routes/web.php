@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Import các Controller CHỈ dành cho Gói 2
@@ -58,6 +58,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('attributes', AttributeController::class);
     Route::resource('attribute-values', AttributeValueController::class);
 
+    // 2. Dán đoạn này vào BÊN TRONG nhóm middleware(['auth']):
+    // Quản lý Profile cá nhân
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     // --- Các route xử lý Biến thể (Variant) ---
     Route::get('/products/{product}/variants', [ProductVariantController::class, 'index'])->name('product.variants.index');
     Route::post('/products/{product}/variants', [ProductVariantController::class, 'store'])->name('product.variants.store');
@@ -74,3 +80,4 @@ Route::middleware(['auth'])->group(function () {
 // SẼ DO THÀNH VIÊN C (GÓI 4) THÊM VÀO SAU.
 // require __DIR__.'/auth.php';
 // Auth::routes();
+require __DIR__.'/auth.php';
