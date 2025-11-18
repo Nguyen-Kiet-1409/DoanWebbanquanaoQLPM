@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('inventory', function (Blueprint $table) {
+            $table->id();
+            
+            $table->foreignId('branch_id')
+                  ->constrained('branches')
+                  ->onDelete('cascade');
+                  
+            $table->foreignId('product_variant_id')
+                  ->constrained('product_variants')
+                  ->onDelete('cascade');
+            
+            // Số lượng tồn kho của sản phẩm này TẠI chi nhánh này
+            $table->integer('quantity')->default(0);
+            
+            $table->timestamps(); // Để biết lần cuối nhập/xuất kho là khi nào
+
+            // Đảm bảo mỗi sản phẩm chỉ có 1 dòng tồn kho tại 1 chi nhánh
+            $table->unique(['branch_id', 'product_variant_id']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('inventory');
+    }
+};
