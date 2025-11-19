@@ -1,4 +1,7 @@
 <?php
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,10 +34,17 @@ Route::get('/', function () {
     return view('welcome'); // Giả sử Gói 4 (Auth/Layouts) sẽ cung cấp file này
 });
 
-
+ // Quản lý Profile cá nhân
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // 2. NHÓM QUẢN TRỊ (Phải đăng nhập mới xem được)
 // Các route này sẽ tạm thời chưa hoạt động cho đến khi 
 // Thành viên C (Gói 4) merge code "Xác thực" (auth) của họ.
+// Xem lịch sử đơn hàng (Của cá nhân)
+    // (Lưu ý: Hàm myOrders nằm trong HomeController nên thuộc Gói 5)
+    Route::get('/don-hang-cua-toi', [HomeController::class, 'myOrders'])->name('my.orders');
+    Route::get('/don-hang-cua-toi/{id}', [HomeController::class, 'myOrderDetail'])->name('my.order.detail');
 Route::middleware(['auth'])->group(function () {
 
     // Dashboard (Trang quản trị chính)
@@ -57,6 +67,11 @@ Route::middleware(['auth'])->group(function () {
     // Quản lý Thuộc tính
     Route::resource('attributes', AttributeController::class);
     Route::resource('attribute-values', AttributeValueController::class);
+// Xem lịch sử đơn hàng (Của cá nhân)
+   
+    Route::get('/don-hang-cua-toi', [HomeController::class, 'myOrders'])->name('my.orders');
+    Route::get('/don-hang-cua-toi/{id}', [HomeController::class, 'myOrderDetail'])->name('my.order.detail');
+    // (Có thể thay thế cái Route::get('/', ...) mặc định cũ)
 
     // 2. Dán đoạn này vào BÊN TRONG nhóm middleware(['auth']):
     // Quản lý Profile cá nhân
@@ -70,7 +85,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/variants/{variant}/edit', [ProductVariantController::class, 'edit'])->name('product.variants.edit');
     Route::put('/variants/{variant}', [ProductVariantController::class, 'update'])->name('product.variants.update');
     Route::delete('/variants/{variant}', [ProductVariantController::class, 'destroy'])->name('product.variants.destroy');
-
+// Đánh giá sản phẩm
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::resource('reviews', ReviewController::class)->only(['index', 'destroy']);
     // --- Các route xử lý Tồn kho (Inventory) ---
     Route::get('/products/{product}/inventory', [InventoryController::class, 'edit'])->name('inventory.edit');
     Route::post('/products/{product}/inventory', [InventoryController::class, 'update'])->name('inventory.update');
