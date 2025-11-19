@@ -18,6 +18,10 @@ use App\Http\Controllers\AttributeValueController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\InventoryController;
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,7 +33,7 @@ use App\Http\Controllers\InventoryController;
 |
 */
 
-// Route mặc định, có thể để hoặc xóa tùy  ý grthrthtr
+// Route mặc định, có thể để hoặc xóa tùy  ý grt
 Route::get('/', function () {
     return view('welcome'); // Giả sử Gói 4 (Auth/Layouts) sẽ cung cấp file này
 });
@@ -51,6 +55,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware(['verified']) // 'auth' đã có ở group
         ->name('dashboard');
+		    // --- GIỎ HÀNG ---
+    Route::get('/gio-hang', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/gio-hang/them', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::get('/gio-hang/xoa/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('cart.update');
+
+    // --- THANH TOÁN ---
+    Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/thanh-toan', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/thanh-toan/vnpay-return', [CheckoutController::class, 'vnpayReturn'])->name('vnpay.return');
+
+    // --- QUẢN LÝ ĐƠN HÀNG (Phía Admin/User tùy logic controller) ---
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::put('/orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
     // Quản lý Chi nhánh
     Route::resource('branches', BranchController::class);
@@ -68,8 +87,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('attributes', AttributeController::class);
     Route::resource('attribute-values', AttributeValueController::class);
 // Xem lịch sử đơn hàng (Của cá nhân)
-   
-    Route::get('/don-hang-cua-toi', [HomeController::class, 'myOrders'])->name('my.orders');
+Route::get('/don-hang-cua-toi', [HomeController::class, 'myOrders'])->name('my.orders');
     Route::get('/don-hang-cua-toi/{id}', [HomeController::class, 'myOrderDetail'])->name('my.order.detail');
     // (Có thể thay thế cái Route::get('/', ...) mặc định cũ)
 
