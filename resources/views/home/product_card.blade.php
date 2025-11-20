@@ -26,7 +26,7 @@
             <div class="mb-3 mt-auto">
                 @if($product->variants->count() > 0)
                     @php
-                        // Logic tìm giá: Ưu tiên giá sale_price, nếu không có thì lấy price
+                        // Logic tìm giá: Ưu tiên giá sale_price, nếu không có thì lấy pricenaja
                         $minSalePrice = $product->variants->whereNotNull('sale_price')->min('sale_price');
                         $minPrice = $product->variants->min('price');
                         
