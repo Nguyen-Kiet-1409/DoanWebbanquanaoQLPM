@@ -10,7 +10,7 @@ class ReviewController extends Controller
     {
         Cache::forget('new_reviews_count');
         
-        // Lấy danh sách đánh giá, mới nhất lên đầubshaj
+        // Lấy danh sách đánh giá, mới nhất lên đầu
         $reviews = Review::with('user', 'product')->orderBy('created_at', 'desc')->get();
         return view('reviews.index', compact('reviews'));
     }

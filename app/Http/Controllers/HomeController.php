@@ -13,7 +13,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // 1. SẢN PHẨM MỚI (Lấy 8 sản phẩm mới nhất)ghhsga
+        // 1. SẢN PHẨM MỚI (Lấy 8 sản phẩm mới nhất)
         $newProducts = Product::where('status', 1)
                             ->with('category', 'variants')
                             ->orderBy('created_at', 'desc')

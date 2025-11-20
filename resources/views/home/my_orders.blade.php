@@ -18,7 +18,6 @@
             <i class="bi bi-arrow-left"></i> Quay lại
         </a>
     </div>
-    //shshs
     <div class="card shadow-sm border-0">
             <div class="card-body p-0">
                 <table class="table table-hover mb-0 align-middle">
