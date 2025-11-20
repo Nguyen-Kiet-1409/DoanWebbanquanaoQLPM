@@ -29,7 +29,7 @@ use App\Http\Controllers\InventoryController;
 |
 */
 
-// Route mặc định, có thể để hoặc xóa tùy  ý grthrthtr
+// Route mặc định, có thể để hoặc xóa tùy  ý grt
 Route::get('/', function () {
     return view('welcome'); // Giả sử Gói 4 (Auth/Layouts) sẽ cung cấp file này
 });
